@@ -9,7 +9,24 @@ class AuthFormWidget extends StatefulWidget {
 
 class _AuthFormWidgetState extends State<AuthFormWidget> {
 
+  bool isLogin = true;
+
+  String _email = "";
+  String _password = "";
+  String _username = "";
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  void trySubmit() {
+    FocusScope.of(context).unfocus();
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      print(_email);
+      print(_password);
+      print(_username);
+    }
+    print("error");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,32 +41,57 @@ class _AuthFormWidgetState extends State<AuthFormWidget> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  //email
                   TextFormField(
+                    key: const ValueKey("email"),
+                    validator: (value) {
+                      if (value!.isEmpty || !value.contains("@")) return "Please enter a valid email";
+                      return null;
+                    },
                     keyboardType: TextInputType.emailAddress,
                     decoration: const InputDecoration(
                       labelText: "Email Address"
                     ),
+                    onSaved: (value) => _email = value ?? "",
                   ),
+                  //username
+                  if (!isLogin)
                   TextFormField(
+                    key: const ValueKey("username"),
+                    validator: (value) {
+                      if (value!.isEmpty || value.length < 4) return "Username must be at least 4 characters long";
+                      return null;
+                    },
                     decoration: const InputDecoration(
                       labelText: "Username"
                     ),
+                    onSaved: (value) => _username = value ?? "",
                   ),
+                  //password
                   TextFormField(
+                    key: const ValueKey("password"),
+                    validator: (value) {
+                      if (value!.isEmpty || value.length < 6) return "Password must be at least 6 characters long";
+                      return null;
+                    },
                     obscureText: true,
                     decoration: const InputDecoration(
                       labelText: "Password"
                     ),
+                    onSaved: (value) => _password = value ?? "",
                   ),
                   const SizedBox(height: 12,),
                   ElevatedButton(
-                    onPressed: () {
-                    },
-                    child: const Text("Login")
+                    onPressed: trySubmit,
+                    child: Text(isLogin ? "Login" : "Signup")
                   ),
                   TextButton(
-                    onPressed: () {},
-                    child: const Text("Create new account")
+                    onPressed: () {
+                      setState(() {
+                        isLogin = !isLogin;
+                      });
+                    },
+                    child: Text(isLogin ? "Create new account" : "Already have an account")
                   )
                 ],
               ),
