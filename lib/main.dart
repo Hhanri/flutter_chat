@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSwatch().copyWith(secondary: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSwatch().copyWith(secondary: Colors.deepPurple, primary: Colors.deepPurple),
         primarySwatch: Colors.pink,
         backgroundColor: Colors.pink,
         elevatedButtonTheme: ElevatedButtonThemeData(
