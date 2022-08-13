@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_chat/widgets/chat/message_bubble_widget.dart';
 
 class MessagesWidget extends StatelessWidget {
   const MessagesWidget({Key? key}) : super(key: key);
@@ -16,7 +17,7 @@ class MessagesWidget extends StatelessWidget {
             padding: const EdgeInsets.all(8),
             itemCount: snapshot.data!.size,
             itemBuilder: (context, index) {
-              return Text(texts[index].data()["text"]);
+              return MessageBubbleWidget(message: texts[index].data()["text"]);
             },
           );
         }
