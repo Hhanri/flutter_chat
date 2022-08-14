@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat/widgets/auth/auth_form_widget.dart';
 
@@ -14,7 +17,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
   bool isLoading = false;
 
-  void _submitAuthForm({required String email, required String password, required String username, required bool isLogin}) async {
+  void _submitAuthForm({required String email,  required File image, required String password, required String username, required bool isLogin,}) async {
     try {
       setState(() {
         isLoading = true;
@@ -24,12 +27,18 @@ class _AuthScreenState extends State<AuthScreen> {
         userData = await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
       } else {
         userData = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
+
+
+        final ref = FirebaseStorage.instance.ref().child('user_image').child("${userData.user!.uid}.jpg");
+        await ref.putFile(image).whenComplete(() => null);
+
         await FirebaseFirestore.instance
           .collection("users")
           .doc(userData.user!.uid)
           .set({
             "username": username,
-            "uid": userData.user!.uid
+            "uid": userData.user!.uid,
+            "image": await ref.getDownloadURL()
           });
       }
     } on FirebaseAuthException catch (error) {
