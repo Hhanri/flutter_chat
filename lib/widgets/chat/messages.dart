@@ -10,22 +10,24 @@ class MessagesWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FirestoreListView<Map<String, dynamic>>(
-        padding: const EdgeInsets.all(8),
-        reverse: true,
-        shrinkWrap: true,
-        loadingBuilder: (context) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        },
-        query: FirebaseFirestore.instance.collection("chats").orderBy("createdAt", descending: true),
-        itemBuilder: (context, snapshot) {
-          final Map<String, dynamic> doc = snapshot.data();
-          return MessageBubbleWidget(
-            key: ValueKey(snapshot.id),
-            message: doc["text"]!, isMe: doc["uid"] == FirebaseAuth.instance.currentUser!.uid
-          );
-        }
+      padding: const EdgeInsets.all(8),
+      reverse: true,
+      shrinkWrap: true,
+      loadingBuilder: (context) {
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+      query: FirebaseFirestore.instance.collection("chats").orderBy("createdAt", descending: true),
+      itemBuilder: (context, snapshot) {
+        final Map<String, dynamic> doc = snapshot.data();
+        return MessageBubbleWidget(
+          key: ValueKey(snapshot.id),
+          uid: doc["uid"],
+          username: doc["username"],
+          message: doc["text"]!, isMe: doc["uid"] == FirebaseAuth.instance.currentUser!.uid
+        );
+      }
     );
   }
 }

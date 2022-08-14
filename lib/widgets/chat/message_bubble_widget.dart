@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 
 class MessageBubbleWidget extends StatelessWidget {
   final String message;
+  final String uid;
+  final String username;
   final bool isMe;
-  const MessageBubbleWidget({Key? key, required this.message, required this.isMe}) : super(key: key);
+  const MessageBubbleWidget({Key? key, required this.message, required this.uid, required this.isMe, required this.username}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
       children: [
         Container(
           decoration: BoxDecoration(
@@ -24,7 +27,23 @@ class MessageBubbleWidget extends StatelessWidget {
           width: 140,
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
           margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-          child: Text(message, style: TextStyle(color: isMe ? Colors.black87 : Theme.of(context).colorScheme.onSecondary),),
+          child: Column(
+            crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                username,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: isMe ? Colors.black87 : Theme.of(context).colorScheme.onSecondary
+                ),
+              ),
+              Text(
+                message,
+                style: TextStyle(color: isMe ? Colors.black87 : Theme.of(context).colorScheme.onSecondary),
+              )
+            ],
+          ),
         ),
       ],
     );
