@@ -1,12 +1,34 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat/screens/auth_screen.dart';
 import 'package:flutter_chat/screens/chat_screen.dart';
 
+Future<void> _backgroundMessage(RemoteMessage message) async {
+    await Firebase.initializeApp();
+    print(message);
+    return;
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  final fbm = FirebaseMessaging.instance;
+  FirebaseMessaging.onBackgroundMessage(_backgroundMessage);
+  NotificationSettings settings = await fbm.requestPermission(
+    alert: true,
+    announcement: false,
+    badge: true,
+    carPlay: false,
+    criticalAlert: false,
+    provisional: false,
+    sound: true,
+  );
+
+  FirebaseMessaging.onMessage.listen((event) => print(event));
+
+
   runApp(const MyApp());
 }
 
